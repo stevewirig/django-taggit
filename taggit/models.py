@@ -32,17 +32,17 @@ class TagBase(models.Model):
             # write and rollback on different DBs
             kwargs["using"] = using
             trans_kwargs = {"using": using}
-            i = 0
-            while True:
-                i += 1
-                try:
-                    sid = transaction.savepoint(**trans_kwargs)
-                    res = super(TagBase, self).save(*args, **kwargs)
-                    transaction.savepoint_commit(sid, **trans_kwargs)
-                    return res
-                except IntegrityError:
-                    transaction.savepoint_rollback(sid, **trans_kwargs)
-                    self.slug = self.slugify(self.name, i)
+#            i = 0
+#            while True:
+#                i += 1
+#                try:
+#                    sid = transaction.savepoint(**trans_kwargs)
+#                    res = super(TagBase, self).save(*args, **kwargs)
+#                    transaction.savepoint_commit(sid, **trans_kwargs)
+#                    return res
+#                except IntegrityError:
+#                    transaction.savepoint_rollback(sid, **trans_kwargs)
+#                    self.slug = self.slugify(self.name, i)
         else:
             return super(TagBase, self).save(*args, **kwargs)
 
