@@ -12,8 +12,8 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class TagBase(models.Model):
-    name = models.CharField(verbose_name=_('Name'), unique=True, max_length=100)
-    slug = models.SlugField(verbose_name=_('Slug'), unique=True, max_length=100)
+    name = models.CharField(verbose_name=_('Name'), unique=False, max_length=100)
+    slug = models.SlugField(verbose_name=_('Slug'), unique=False, max_length=100)
 
     def __str__(self):
         return self.name
@@ -32,17 +32,17 @@ class TagBase(models.Model):
             # write and rollback on different DBs
             kwargs["using"] = using
             trans_kwargs = {"using": using}
-#            i = 0
-#            while True:
-#                i += 1
-#                try:
-#                    sid = transaction.savepoint(**trans_kwargs)
-#                    res = super(TagBase, self).save(*args, **kwargs)
-#                    transaction.savepoint_commit(sid, **trans_kwargs)
-#                    return res
-#                except IntegrityError:
-#                    transaction.savepoint_rollback(sid, **trans_kwargs)
-#                    self.slug = self.slugify(self.name, i)
+            '''i = 0
+            while True:
+                i += 1
+                try:
+                    sid = transaction.savepoint(**trans_kwargs)
+                    res = super(TagBase, self).save(*args, **kwargs)
+                    transaction.savepoint_commit(sid, **trans_kwargs)
+                    return res
+                except IntegrityError:
+                    transaction.savepoint_rollback(sid, **trans_kwargs)
+                    self.slug = self.slugify(self.name, i)'''
         else:
             return super(TagBase, self).save(*args, **kwargs)
 
